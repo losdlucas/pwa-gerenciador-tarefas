@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>TaskFlow</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+
+  <meta name="theme-color" content="#121212">
+</head>
+<body>
+
+  <div class="container">
+
+    <header>
+      <h1>TaskFlow</h1>
+      <p>Gerencie suas tarefas</p>
+    </header>
+
+    <div class="input-area">
+      <input type="text" id="taskInput" placeholder="Digite uma tarefa...">
+
+      <button id="addBtn">
+        +
+      </button>
+    </div>
+
+    <div class="filters">
+      <button onclick="filtrar('todas')">Todas</button>
+      <button onclick="filtrar('ativas')">Ativas</button>
+      <button onclick="filtrar('concluidas')">Concluídas</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
