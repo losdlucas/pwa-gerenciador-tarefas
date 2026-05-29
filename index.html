@@ -10,6 +10,16 @@
   <link rel="manifest" href="manifest.json">
 
   <meta name="theme-color" content="#121212">
+
+  <!-- Fonte -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Ícones -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
 </head>
 <body>
 
@@ -17,23 +27,68 @@
 
     <header>
       <h1>TaskFlow</h1>
-      <p>Gerencie suas tarefas</p>
+      <p>Organize sua produtividade</p>
     </header>
 
+    <!-- STATS -->
+    <div class="stats">
+
+      <div class="card-stat">
+        <strong id="totalTasks">0</strong>
+        <span>Tarefas</span>
+      </div>
+
+      <div class="card-stat">
+        <strong id="completedTasks">0</strong>
+        <span>Concluídas</span>
+      </div>
+
+    </div>
+
+    <!-- PROGRESSO -->
+    <div class="progress-area">
+      <div id="progressBar"></div>
+    </div>
+
+    <!-- INPUT -->
     <div class="input-area">
-      <input type="text" id="taskInput" placeholder="Digite uma tarefa...">
+
+      <input
+        type="text"
+        id="taskInput"
+        placeholder="Digite uma tarefa..."
+      >
+
+      <select id="prioritySelect">
+        <option value="alta">🔥</option>
+        <option value="media">⚡</option>
+        <option value="baixa">🌱</option>
+      </select>
 
       <button id="addBtn">
-        +
+        <i class="fa-solid fa-plus"></i>
       </button>
+
     </div>
 
+    <!-- FILTROS -->
     <div class="filters">
-      <button onclick="filtrar('todas')">Todas</button>
-      <button onclick="filtrar('ativas')">Ativas</button>
-      <button onclick="filtrar('concluidas')">Concluídas</button>
+
+      <button onclick="filtrar('todas')">
+        Todas
+      </button>
+
+      <button onclick="filtrar('ativas')">
+        Ativas
+      </button>
+
+      <button onclick="filtrar('concluidas')">
+        Concluídas
+      </button>
+
     </div>
 
+    <!-- LISTA -->
     <ul id="taskList"></ul>
 
   </div>

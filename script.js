@@ -1,48 +1,104 @@
 const taskInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
+const prioritySelect = document.getElementById("prioritySelect");
 
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 
+let filtroAtual = "todas";
+
 function salvar(){
-    localStorage.setItem("tarefas", JSON.stringify(tarefas));
+    localStorage.setItem(
+        "tarefas",
+        JSON.stringify(tarefas)
+    );
 }
 
-function renderizar(filtro = "todas"){
+function atualizarStats(){
+
+    document.getElementById(
+        "totalTasks"
+    ).innerText = tarefas.length;
+
+    document.getElementById(
+        "completedTasks"
+    ).innerText =
+    tarefas.filter(t => t.concluida).length;
+}
+
+function atualizarBarra(){
+
+    const concluidas =
+    tarefas.filter(t => t.concluida).length;
+
+    const porcentagem =
+    tarefas.length === 0
+    ? 0
+    : (concluidas / tarefas.length) * 100;
+
+    document.getElementById(
+        "progressBar"
+    ).style.width = porcentagem + "%";
+}
+
+function renderizar(){
 
     taskList.innerHTML = "";
 
     let tarefasFiltradas = tarefas;
 
-    if(filtro === "ativas"){
-        tarefasFiltradas = tarefas.filter(t => !t.concluida);
+    if(filtroAtual === "ativas"){
+        tarefasFiltradas =
+        tarefas.filter(t => !t.concluida);
     }
 
-    if(filtro === "concluidas"){
-        tarefasFiltradas = tarefas.filter(t => t.concluida);
+    if(filtroAtual === "concluidas"){
+        tarefasFiltradas =
+        tarefas.filter(t => t.concluida);
     }
 
-    tarefasFiltradas.forEach((tarefa, index) => {
+    tarefasFiltradas.forEach((tarefa) => {
 
         const li = document.createElement("li");
 
-        li.classList.add("task");
+        li.classList.add(
+            "task",
+            tarefa.prioridade
+        );
 
         if(tarefa.concluida){
             li.classList.add("completed");
         }
 
         li.innerHTML = `
-            <span>${tarefa.texto}</span>
+            <div class="task-info">
+
+                <span class="task-text">
+                    ${tarefa.texto}
+                </span>
+
+                <small class="task-date">
+                    ${tarefa.data}
+                </small>
+
+            </div>
 
             <div class="task-buttons">
 
-                <button class="complete-btn" onclick="concluir(${index})">
-                    ✓
+                <button
+                class="complete-btn"
+                onclick="concluir(${tarefa.id})">
+
+                    <i class="fa-solid fa-check"></i>
+
                 </button>
 
-                <button class="delete-btn" onclick="remover(${index})">
-                    X
+                <button
+                class="delete-btn"
+                onclick="remover(${tarefa.id})">
+
+                    <i class="fa-solid fa-trash"></i>
+
                 </button>
 
             </div>
@@ -52,6 +108,9 @@ function renderizar(filtro = "todas"){
 
     });
 
+    atualizarStats();
+
+    atualizarBarra();
 }
 
 function adicionar(){
@@ -61,8 +120,19 @@ function adicionar(){
     if(texto === "") return;
 
     tarefas.push({
-        texto,
-        concluida:false
+
+        id:Date.now(),
+
+        texto:texto,
+
+        prioridade:
+        prioritySelect.value,
+
+        concluida:false,
+
+        data:new Date()
+        .toLocaleString("pt-BR")
+
     });
 
     salvar();
@@ -72,18 +142,23 @@ function adicionar(){
     taskInput.value = "";
 }
 
-function concluir(index){
+function concluir(id){
 
-    tarefas[index].concluida = !tarefas[index].concluida;
+    const tarefa =
+    tarefas.find(t => t.id === id);
+
+    tarefa.concluida =
+    !tarefa.concluida;
 
     salvar();
 
     renderizar();
 }
 
-function remover(index){
+function remover(id){
 
-    tarefas.splice(index,1);
+    tarefas =
+    tarefas.filter(t => t.id !== id);
 
     salvar();
 
@@ -91,19 +166,32 @@ function remover(index){
 }
 
 function filtrar(tipo){
-    renderizar(tipo);
+
+    filtroAtual = tipo;
+
+    renderizar();
 }
 
-addBtn.addEventListener("click", adicionar);
+addBtn.addEventListener(
+    "click",
+    adicionar
+);
 
-taskInput.addEventListener("keypress", e => {
+taskInput.addEventListener(
+    "keypress",
+    e => {
+
     if(e.key === "Enter"){
         adicionar();
     }
+
 });
 
 renderizar();
 
 if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("service-worker.js");
+
+    navigator.serviceWorker
+    .register("service-worker.js");
+
 }
